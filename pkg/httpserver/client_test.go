@@ -26,16 +26,15 @@ func TestHttpClient(t *testing.T) {
 		t.Parallel()
 
 		responseHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			httpserver.SendResponseSuccess(w, dto.ProductResponse{
-				Id:   uint(1),
-				Name: "Name",
+			httpserver.SendResponseSuccess(w, dto.Token{
+				AccessToken: "TOKEN",
 			})
 		})
 
 		ts := httptest.NewServer(responseHandler)
 		defer ts.Close()
 
-		response, err := httpserver.DoRequest(context.TODO(), ts.Client(), ts.URL, nil, nil, http.MethodGet, dto.ProductResponse{})
+		response, err := httpserver.DoRequest(context.TODO(), ts.Client(), ts.URL, nil, nil, http.MethodGet, dto.Token{})
 
 		assert.NoError(t, err)
 		assert.NotEmpty(t, response)
@@ -51,7 +50,7 @@ func TestHttpClient(t *testing.T) {
 		ts := httptest.NewServer(responseHandler)
 		defer ts.Close()
 
-		response, err := httpserver.DoRequest(context.TODO(), ts.Client(), ts.URL, nil, nil, http.MethodGet, dto.ProductResponse{})
+		response, err := httpserver.DoRequest(context.TODO(), ts.Client(), ts.URL, nil, nil, http.MethodGet, dto.Token{})
 
 		assert.Error(t, err)
 		assert.Empty(t, response)
@@ -64,7 +63,7 @@ func TestHttpClient(t *testing.T) {
 
 		assert.NotEmpty(t, client)
 
-		response, err := httpserver.DoRequest(context.TODO(), client, "http://localhost", nil, nil, http.MethodGet, dto.ProductResponse{})
+		response, err := httpserver.DoRequest(context.TODO(), client, "http://localhost", nil, nil, http.MethodGet, dto.Token{})
 
 		assert.Error(t, err)
 		assert.Empty(t, response)

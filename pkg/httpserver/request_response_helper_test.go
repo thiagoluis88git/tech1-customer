@@ -316,7 +316,7 @@ func TestRequestResponseHelper(t *testing.T) {
 		t.Parallel()
 
 		responseHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			var destination dto.ComboForm
+			var destination dto.Customer
 			err := httpserver.DecodeJSONBody(w, r, &destination)
 
 			assert.Error(t, err)

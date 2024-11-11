@@ -2,11 +2,28 @@ package handler_test
 
 import (
 	"context"
-	"sync"
+	"os"
 
 	"github.com/stretchr/testify/mock"
 	"github.com/thiagoluis88git/tech1-customer/internal/core/domain/dto"
+	"github.com/thiagoluis88git/tech1-customer/pkg/environment"
 )
+
+func setup() {
+	os.Setenv(environment.QRCodeGatewayRootURL, "ROOT_URL")
+	os.Setenv(environment.DBHost, "HOST")
+	os.Setenv(environment.DBPort, "1234")
+	os.Setenv(environment.DBUser, "User")
+	os.Setenv(environment.DBPassword, "Pass")
+	os.Setenv(environment.DBName, "Name")
+	os.Setenv(environment.CognitoClientID, "ClienId")
+	os.Setenv(environment.CognitoGroupAdmin, "Admin")
+	os.Setenv(environment.CognitoGroupUser, "CognitoUser")
+	os.Setenv(environment.CognitoUserPoolID, "USerPool")
+	os.Setenv(environment.WebhookMercadoLivrePaymentURL, "WEBHOOK")
+	os.Setenv(environment.QRCodeGatewayToken, "token")
+	os.Setenv(environment.Region, "Region")
+}
 
 func mockCreateUserForm() dto.UserAdmin {
 	return dto.UserAdmin{
@@ -213,128 +230,6 @@ func (mock *MockLoginUnknownCustomerUseCase) Execute(ctx context.Context) (dto.T
 	return args.Get(0).(dto.Token), nil
 }
 
-func (mock *MockPayOrderUseCase) Execute(ctx context.Context, payment dto.Payment) (dto.PaymentResponse, error) {
-	args := mock.Called(ctx, payment)
-	err := args.Error(1)
-
-	if err != nil {
-		return dto.PaymentResponse{}, err
-	}
-
-	return args.Get(0).(dto.PaymentResponse), nil
-}
-
-func (mock *MockGetOrdersToPrepareUseCase) Execute(ctx context.Context) ([]dto.OrderResponse, error) {
-	args := mock.Called(ctx)
-	err := args.Error(1)
-
-	if err != nil {
-		return []dto.OrderResponse{}, err
-	}
-
-	return args.Get(0).([]dto.OrderResponse), nil
-}
-
-func (mock *MockGetOrdersToFollowUseCase) Execute(ctx context.Context) ([]dto.OrderResponse, error) {
-	args := mock.Called(ctx)
-	err := args.Error(1)
-
-	if err != nil {
-		return []dto.OrderResponse{}, err
-	}
-
-	return args.Get(0).([]dto.OrderResponse), nil
-}
-
-func (mock *MockGetOrdersWaitingPaymentUseCase) Execute(ctx context.Context) ([]dto.OrderResponse, error) {
-	args := mock.Called(ctx)
-	err := args.Error(1)
-
-	if err != nil {
-		return []dto.OrderResponse{}, err
-	}
-
-	return args.Get(0).([]dto.OrderResponse), nil
-}
-
-func (m *MockCreateOrderUseCase) Execute(
-	ctx context.Context,
-	order dto.Order,
-	date int64,
-	wg *sync.WaitGroup,
-	_ chan bool) (dto.OrderResponse, error) {
-	args := m.Called(ctx, order, date, wg, mock.Anything)
-	err := args.Error(1)
-
-	if err != nil {
-		return dto.OrderResponse{}, err
-	}
-
-	return args.Get(0).(dto.OrderResponse), nil
-}
-
-func (m *MockCreateProductUseCase) Execute(ctx context.Context, product dto.ProductForm) (uint, error) {
-	args := m.Called(ctx, product)
-	err := args.Error(1)
-
-	if err != nil {
-		return uint(0), err
-	}
-
-	return args.Get(0).(uint), nil
-}
-
-func (m *MockGetProductsByCategoryUseCase) Execute(ctx context.Context, category string) ([]dto.ProductResponse, error) {
-	args := m.Called(ctx, category)
-	err := args.Error(1)
-
-	if err != nil {
-		return []dto.ProductResponse{}, err
-	}
-
-	return args.Get(0).([]dto.ProductResponse), nil
-}
-
-func (m *MockGetProductsByIDUseCase) Execute(ctx context.Context, id uint) (dto.ProductResponse, error) {
-	args := m.Called(ctx, id)
-	err := args.Error(1)
-
-	if err != nil {
-		return dto.ProductResponse{}, err
-	}
-
-	return args.Get(0).(dto.ProductResponse), nil
-}
-
-func (m *MockGenerateQRCodePaymentUseCase) Execute(
-	ctx context.Context,
-	token string,
-	qrOrder dto.QRCodeOrder,
-	date int64,
-	wg *sync.WaitGroup,
-	ch chan bool,
-) (dto.QRCodeDataResponse, error) {
-	args := m.Called(ctx, token, qrOrder, date, wg, mock.Anything)
-	err := args.Error(1)
-
-	if err != nil {
-		return dto.QRCodeDataResponse{}, err
-	}
-
-	return args.Get(0).(dto.QRCodeDataResponse), nil
-}
-
-func (mock *MockCreateOrderUseCase) GenerateTicket(ctx context.Context, date int64) int {
-	args := mock.Called(ctx, date)
-	err := args.Error(1)
-
-	if err != nil {
-		return 0
-	}
-
-	return args.Get(0).(int)
-}
-
 func (mock *MockCreateUserUseCase) Execute(ctx context.Context, user dto.UserAdmin) (dto.UserAdminResponse, error) {
 	args := mock.Called(ctx, user)
 	err := args.Error(1)
@@ -388,91 +283,4 @@ func (mock *MockUpdateUserUseCase) Execute(ctx context.Context, user dto.UserAdm
 	}
 
 	return nil
-}
-
-func (mock *MockUpdateToPreparingUseCase) Execute(ctx context.Context, orderId uint) error {
-	args := mock.Called(ctx, orderId)
-	err := args.Error(1)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (mock *MockDeleteProductUseCase) Execute(ctx context.Context, productId uint) error {
-	args := mock.Called(ctx, productId)
-	err := args.Error(0)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (mock *MockUpdateProductUseCase) Execute(ctx context.Context, product dto.ProductForm) error {
-	args := mock.Called(ctx, product)
-	err := args.Error(0)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (mock *MockUpdateToDoneUseCase) Execute(ctx context.Context, orderId uint) error {
-	args := mock.Called(ctx, orderId)
-	err := args.Error(1)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (mock *MockUpdateToDeliveredUseCase) Execute(ctx context.Context, orderId uint) error {
-	args := mock.Called(ctx, orderId)
-	err := args.Error(1)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (mock *MockUpdateToNotDeliveredUseCase) Execute(ctx context.Context, orderId uint) error {
-	args := mock.Called(ctx, orderId)
-	err := args.Error(1)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (mock *MockGetOrderByIdUseCase) Execute(ctx context.Context, orderId uint) (dto.OrderResponse, error) {
-	args := mock.Called(ctx, orderId)
-	err := args.Error(1)
-
-	if err != nil {
-		return dto.OrderResponse{}, err
-	}
-
-	return args.Get(0).(dto.OrderResponse), nil
-}
-
-func (mock *MockGetPaymentTypesUseCase) Execute() []string {
-	args := mock.Called()
-	return args.Get(0).([]string)
-}
-
-func (mock *MockGetCategoryUseCase) Execute() []string {
-	args := mock.Called()
-	return args.Get(0).([]string)
 }
