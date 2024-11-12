@@ -24,9 +24,9 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
-// @title Tech1 API Docs
+// @title Tech1 Customer Docs
 // @version 1.0
-// @description This is the API for the Tech1 Fiap Project.
+// @description This is the API for the Tech1 Customer Project.
 // @termsOfService http://swagger.io/terms/
 
 // @contact.name API Support
@@ -84,7 +84,6 @@ func main() {
 	loginUnknownCustomerUseCase := usecases.NewLoginUnknownCustomerUseCase(customerRepo)
 	createCustomerUseCase := usecases.NewCreateCustomerUseCase(validateCPFUseCase, customerRepo)
 	updateCustomerUseCase := usecases.NewUpdateCustomerUseCase(validateCPFUseCase, customerRepo)
-	getCustomerByIdUseCase := usecases.NewGetCustomerByIdUseCase(customerRepo)
 	getCustomerByCPFUseCase := usecases.NewGetCustomerByCPFUseCase(validateCPFUseCase, customerRepo)
 
 	loginUserUseCase := usecases.NewLoginUserUseCase(userRepo)
@@ -107,8 +106,7 @@ func main() {
 	router.Post("/auth/admin/signup", handler.CreateUserHandler(createUserUseCase))
 
 	router.Put("/api/admin/customers/{id}", handler.UpdateCustomerHandler(updateCustomerUseCase))
-	router.Get("/api/customers/{id}", handler.GetCustomerByIdHandler(getCustomerByIdUseCase))
-	router.Post("/api/customers/login", handler.GetCustomerByCPFHandler(getCustomerByCPFUseCase))
+	router.Get("/api/customers/{cpf}", handler.GetCustomerByCPFHandler(getCustomerByCPFUseCase))
 
 	router.Put("/api/users/{id}", handler.UpdateUserHandler(updateUserUseCase))
 	router.Get("/api/users/{id}", handler.GetUserByIdHandler(getUserByIdUseCase))

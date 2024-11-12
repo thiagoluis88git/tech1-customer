@@ -169,15 +169,13 @@ func GetCustomerByIdHandler(getCustomerById usecases.GetCustomerByIdUseCase) htt
 // @Param customer body dto.CustomerForm true "customerForm"
 // @Success 200 {object} dto.Customer
 // @Failure 404 "Customer not found"
-// @Router /api/customers/login [post]
+// @Router /api/customers/{cpf} [post]
 func GetCustomerByCPFHandler(getCustomerByCPF usecases.GetCustomerByCPFUseCase) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var customerForm dto.CustomerForm
-
-		err := httpserver.DecodeJSONBody(w, r, &customerForm)
+		cpf, err := httpserver.GetPathParamFromRequest(r, "cpf")
 
 		if err != nil {
-			log.Print("decoding customer form body", map[string]interface{}{
+			log.Print("update customer", map[string]interface{}{
 				"error":  err.Error(),
 				"status": httpserver.GetStatusCodeFromError(err),
 			})
@@ -185,7 +183,7 @@ func GetCustomerByCPFHandler(getCustomerByCPF usecases.GetCustomerByCPFUseCase) 
 			return
 		}
 
-		customer, err := getCustomerByCPF.Execute(r.Context(), customerForm.CPF)
+		customer, err := getCustomerByCPF.Execute(r.Context(), cpf)
 
 		if err != nil {
 			log.Print("get customer by id", map[string]interface{}{
