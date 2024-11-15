@@ -56,7 +56,7 @@ func (s *Server) Start() {
 			}
 		}
 
-		log.Print("API Tech 1 has started")
+		log.Print("Fastfood Customers API has started")
 
 		s.notify <- s.server.Serve(listener)
 		close(s.notify)
