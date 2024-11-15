@@ -430,10 +430,11 @@ func TestCustomerHandler(t *testing.T) {
 
 		body := bytes.NewBuffer(jsonData)
 
-		req := httptest.NewRequest(http.MethodPost, "/api/customer/login", body)
+		req := httptest.NewRequest(http.MethodPost, "/api/customer/{cpf}", body)
 		req.Header.Add("Content-Type", "application/json")
 
 		rctx := chi.NewRouteContext()
+		rctx.URLParams.Add("cpf", "83212446293")
 
 		req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
 
@@ -471,10 +472,11 @@ func TestCustomerHandler(t *testing.T) {
 
 		body := bytes.NewBuffer(jsonData)
 
-		req := httptest.NewRequest(http.MethodPost, "/api/customer/login", body)
+		req := httptest.NewRequest(http.MethodPost, "/api/customer/{cpf}", body)
 		req.Header.Add("Content-Type", "application/json")
 
 		rctx := chi.NewRouteContext()
+		rctx.URLParams.Add("cpf", "83212446293")
 
 		req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
 
@@ -491,35 +493,5 @@ func TestCustomerHandler(t *testing.T) {
 		getCustomerCPFIdHandler.ServeHTTP(recorder, req)
 
 		assert.Equal(t, http.StatusInternalServerError, recorder.Code)
-	})
-
-	t.Run("got error with invalid json when calling get customer by cpf handler", func(t *testing.T) {
-		t.Parallel()
-
-		body := bytes.NewBuffer([]byte("assd{{}"))
-
-		req := httptest.NewRequest(http.MethodPost, "/api/customer/login", body)
-		req.Header.Add("Content-Type", "application/json")
-
-		rctx := chi.NewRouteContext()
-
-		req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
-
-		recorder := httptest.NewRecorder()
-
-		getCustomerByCPF := new(MockGetCustomerByCPFUseCase)
-
-		getCustomerByCPF.On("Execute", req.Context(), "83012446293").Return(dto.Customer{
-			ID:    uint(123),
-			Name:  "Teste",
-			CPF:   "83212446293",
-			Email: "teste@gmail.com",
-		}, nil)
-
-		getCustomerCPFIdHandler := handler.GetCustomerByCPFHandler(getCustomerByCPF)
-
-		getCustomerCPFIdHandler.ServeHTTP(recorder, req)
-
-		assert.Equal(t, http.StatusBadRequest, recorder.Code)
 	})
 }
