@@ -27,4 +27,4 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: thiagoluis88/fastfood-app:${{ github.event.inputs.version }}
+        tags: thiagoluis88/fastfood-customers:${{ github.event.inputs.version }}
