@@ -49,6 +49,40 @@ func (suite *RepositoryTestSuite) TestCreateCustomerWithSuccess() {
 	suite.Equal(uint(1), customer.ID)
 }
 
+func (suite *RepositoryTestSuite) TestGetCustomerByIDError() {
+	// ensure that the postgres database is empty
+	var customers []model.Customer
+	result := suite.db.Connection.Find(&customers)
+	suite.NoError(result.Error)
+	suite.Empty(customers)
+
+	mockCognito := new(MockCognitoRemoteDataSource)
+	repo := repositories.NewCustomerRepository(suite.db, mockCognito)
+
+	newCustomer := dto.Customer{
+		Name:  "Teste",
+		CPF:   "12312312312",
+		Email: "teste@teste.com",
+	}
+
+	newCustomerModel := &model.Customer{
+		Name:  "Teste",
+		CPF:   "12312312312",
+		Email: "teste@teste.com",
+	}
+
+	mockCognito.On("SignUp", newCustomerModel).Return(nil)
+
+	newId, err := repo.CreateCustomer(suite.ctx, newCustomer)
+
+	suite.NoError(err)
+	suite.Equal(uint(1), newId)
+
+	customer, err := repo.GetCustomerById(suite.ctx, uint(3))
+	suite.Error(err)
+	suite.Empty(customer)
+}
+
 func (suite *RepositoryTestSuite) TestCreateCustomerWithConflictError() {
 	// ensure that the postgres database is empty
 	var customers []model.Customer

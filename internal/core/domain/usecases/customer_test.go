@@ -208,4 +208,72 @@ func TestCustomerServices(t *testing.T) {
 		assert.Equal(t, true, errors.As(err, &businessError))
 		assert.Equal(t, http.StatusNotFound, businessError.StatusCode)
 	})
+
+	t.Run("got success when login in services", func(t *testing.T) {
+		t.Parallel()
+
+		mockRepo := new(MockCustomerRepository)
+		sut := NewLoginCustomerUseCase(mockRepo)
+
+		ctx := context.TODO()
+
+		mockRepo.On("Login", ctx, "07073286083").Return("token", nil)
+
+		response, err := sut.Execute(ctx, "07073286083")
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, response)
+	})
+
+	t.Run("got error when login in services", func(t *testing.T) {
+		t.Parallel()
+
+		mockRepo := new(MockCustomerRepository)
+		sut := NewLoginCustomerUseCase(mockRepo)
+
+		ctx := context.TODO()
+
+		mockRepo.On("Login", ctx, "07073286083").Return("", &responses.NetworkError{
+			Code: 401,
+		})
+
+		response, err := sut.Execute(ctx, "07073286083")
+
+		assert.Error(t, err)
+		assert.Empty(t, response)
+	})
+
+	t.Run("got success when login in unknown services", func(t *testing.T) {
+		t.Parallel()
+
+		mockRepo := new(MockCustomerRepository)
+		sut := NewLoginUnknownCustomerUseCase(mockRepo)
+
+		ctx := context.TODO()
+
+		mockRepo.On("LoginUnknown").Return("token", nil)
+
+		response, err := sut.Execute(ctx)
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, response)
+	})
+
+	t.Run("got error when login in unknown services", func(t *testing.T) {
+		t.Parallel()
+
+		mockRepo := new(MockCustomerRepository)
+		sut := NewLoginUnknownCustomerUseCase(mockRepo)
+
+		ctx := context.TODO()
+
+		mockRepo.On("LoginUnknown").Return("token", &responses.NetworkError{
+			Code: 401,
+		})
+
+		response, err := sut.Execute(ctx)
+
+		assert.Error(t, err)
+		assert.Empty(t, response)
+	})
 }
