@@ -225,13 +225,6 @@ func TestCustomerHandler(t *testing.T) {
 
 		updateCustomerUseCase := new(MockUpdateCustomerUseCase)
 
-		updateCustomerUseCase.On("Execute", req.Context(), dto.Customer{
-			ID:    uint(123),
-			Name:  "Teste",
-			CPF:   "83212446293",
-			Email: "teste@gmail.com",
-		}).Return(nil)
-
 		updateCustomerHandler := handler.UpdateCustomerHandler(updateCustomerUseCase)
 
 		updateCustomerHandler.ServeHTTP(recorder, req)
@@ -461,6 +454,33 @@ func TestCustomerHandler(t *testing.T) {
 		assert.NoError(t, err)
 
 		assert.Equal(t, "Teste", customer.Name)
+	})
+
+	t.Run("got error on inalid path when calling get customer by cpf handler", func(t *testing.T) {
+		t.Parallel()
+
+		jsonData, err := json.Marshal(mockCustomerByCPF())
+
+		assert.NoError(t, err)
+
+		body := bytes.NewBuffer(jsonData)
+
+		req := httptest.NewRequest(http.MethodPost, "/api/customer/{cpf}", body)
+		req.Header.Add("Content-Type", "application/json")
+
+		rctx := chi.NewRouteContext()
+
+		req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
+
+		recorder := httptest.NewRecorder()
+
+		getCustomerByCPF := new(MockGetCustomerByCPFUseCase)
+
+		getCustomerCPFIdHandler := handler.GetCustomerByCPFHandler(getCustomerByCPF)
+
+		getCustomerCPFIdHandler.ServeHTTP(recorder, req)
+
+		assert.Equal(t, http.StatusBadRequest, recorder.Code)
 	})
 
 	t.Run("got error on UseCase when calling get customer by cpf handler", func(t *testing.T) {
