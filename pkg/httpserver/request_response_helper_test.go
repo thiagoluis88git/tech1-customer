@@ -212,6 +212,31 @@ func TestRequestResponseHelper(t *testing.T) {
 		defer response.Body.Close()
 	})
 
+	t.Run("got error when passing wrong Content-Type", func(t *testing.T) {
+		t.Parallel()
+
+		responseHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			var destination any
+			err := httpserver.DecodeJSONBody(w, r, &destination)
+
+			assert.Error(t, err)
+			assert.Equal(t, "Content-Type header is not application/json", err.Error())
+
+			w.WriteHeader(http.StatusOK)
+		})
+
+		ts := httptest.NewServer(responseHandler)
+		defer ts.Close()
+
+		req, _ := http.NewRequest(http.MethodPost, ts.URL+"/mock", strings.NewReader(""))
+		req.Header.Add("Content-Type", "asdsad")
+
+		response, err := ts.Client().Do(req)
+
+		assert.NoError(t, err)
+		defer response.Body.Close()
+	})
+
 	t.Run("got error when passing empty Content-Type", func(t *testing.T) {
 		t.Parallel()
 
