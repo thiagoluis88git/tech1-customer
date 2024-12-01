@@ -190,7 +190,7 @@ This section will be used by the restaurant owner to manage the restaurant produ
 ### 1 Product manipulation
 ***(Owner view)***
 
-See [Orders README]()
+See [Orders README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 
 ## Section 2 Customer order
@@ -218,66 +218,66 @@ We can use this site [CPF generator](https://www.4devs.com.br/gerador_de_cpf) to
 ### 2 List all the categories
 ***(Customer view)***
 
-See [Orders README]()
+See [Orders README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 ### 3 List products by the chosen category
 ***(Customer view)***
 
-See [Orders README]()
+See [Orders README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 ### 4 Pay the products amount
 ***(Customer view)***
 
-See [Payment README]()
+See [Payment README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 #### 4_1 Generate Mercado Livre QR Code ####
 ***(Customer view)***
 
-See [Payment README]()
+See [Payment README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 ### 5 Create an order
 ***(Customer view)***
 
-See [Orders README]()
+See [Orders README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 ### 6 List orders to follow
 ***(Customer and Waiter)***
 
-See [Orders README]()
+See [Orders README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 ### 7 List orders to prepare
 ***(Chef view)***
 
-See [Orders README]()
+See [Orders README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 ### 8 List orders waiting payment
 ***(Owner view)***
 
-See [Orders README]()
+See [Orders README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 ### 9 Update order to preparing
 ***(Chef view)***
 
-See [Orders README]()
+See [Orders README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 ### 10 Update order to done
 ***(Chef view)***
 
-See [Orders README]()
+See [Orders README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 ### 11 Update order to delivered
 ***(Waiter view)***
 
-See [Orders README]()
+See [Orders README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 ### 12 Update order to not delivered
 ***(Waiter view)***
 
-See [Orders README]()
+See [Orders README](https://github.com/thiagoluis88git/tech1-orders/blob/main/README.md)
 
 ## Mercado Livre Webhook ##
 
-See [Payment README]()
+See [Payment README](https://github.com/thiagoluis88git/tech1-payment/blob/main/README.md)
 
 ## Documentation
 
